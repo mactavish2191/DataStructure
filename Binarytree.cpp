@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <stack>
 #include <queue>
 #include <limits>
@@ -344,8 +345,76 @@ int levelMaxSum(Binarytree *root) {
 	return maxSum;
 }
 
-void printPath(Binarytree *root) {
+void print(int pathLen[], int len) {
+	std::cout << "Paths: ";
+	for (int i = 0; i < len; i++) {
+		std::cout << pathLen[i] << " ";
+	}
+	std::cout << "\n";
+}
 
+void paths(Binarytree *root, int pathLen[], int len) {
+	if (root == nullptr) {
+		return;
+	}
+
+	pathLen[len] = root->data;
+	len++;
+
+	if (root->left == nullptr && root->right == nullptr) {
+		print(pathLen, len);
+	}
+	else {
+		paths(root->left, pathLen, len);
+		paths(root->right, pathLen, len);
+	}
+}
+
+void printPath(Binarytree *root) {
+	int pathLen[20];
+	int len = 0;
+	paths(root, pathLen, len);
+}
+
+int hasPathSum(Binarytree *root, int sum) {
+	if (root == nullptr) {
+		return (sum == 0);
+	}
+	else {
+		int remainingSum = sum - root->data;
+
+		if ((root->left && root->right) || (root->left == nullptr && root->right == nullptr)) {
+			return hasPathSum(root->left, remainingSum) || hasPathSum(root->right, remainingSum);
+		}
+		else if(root ->left){
+			return hasPathSum(root->left, remainingSum);
+		}
+		else { //root->right
+			return hasPathSum(root->right, remainingSum);
+		}
+	}
+}
+
+int totalSum(Binarytree *root) {
+	if (root == nullptr) {
+		return 0;
+	}
+
+	return totalSum(root->left) + root->data + totalSum(root->right);
+}
+
+Binarytree* mirrorTree(Binarytree *root) {
+	Binarytree *tmp = nullptr;
+	if (root != nullptr) {
+		mirrorTree(root->left);
+		mirrorTree(root->right);
+
+		tmp = root->left;
+		root->left = root->right;
+		root->right = tmp;
+	}
+
+	return root;
 }
 
 int main()
@@ -360,9 +429,13 @@ int main()
 	insert(&root, 7);
 
 	BreadthFirstTraversal(root);
-
-	std::cout << "Level Max Sum:" << levelMaxSum(root) << "\n";
-
+	
+	
+	//root = mirrorTree(root);
+	//std::cout << totalSum(root) << "\n";
+	//std::cout << "Path Sum: " << hasPathSum(root, 9) << "\n";
+	//std::cout << "Level Max Sum:" << levelMaxSum(root) << "\n";
+	//printPath(root);
 	// std::cout << "Size: " << sizeR(root) << "\n";
 	// std::cout << "Height: " << heightI(root) << "\n";
 	// std::cout << "Deepest Node: " << deepestNode(root) << "\n";
@@ -379,5 +452,6 @@ int main()
 
 
 	DeleteTree(root);
+	std::cin.get();
 	return 0;
 }
