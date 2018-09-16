@@ -344,6 +344,10 @@ int levelMaxSum(Binarytree *root) {
 	return maxSum;
 }
 
+void printPath(Binarytree *root) {
+
+}
+
 int main()
 {
 	Binarytree *root = nullptr;
