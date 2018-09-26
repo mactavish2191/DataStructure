@@ -417,6 +417,23 @@ Binarytree* mirrorTree(Binarytree *root) {
 	return root;
 }
 
+Binarytree* LowestCommonAncestor(Binarytree *root, int key1, int key2){
+	if(root == nullptr)
+		return root;
+
+	if(root->data == key1 || root->data == key2)
+		return root;
+
+	Binarytree *left = LowestCommonAncestor(root->left, key1, key2);
+	Binarytree *right = LowestCommonAncestor(root->right, key1, key2);
+
+	if(left && right){
+		return root;
+	}
+	else
+		return (left ? left : right);
+}
+
 int main()
 {
 	Binarytree *root = nullptr;
@@ -430,7 +447,8 @@ int main()
 
 	BreadthFirstTraversal(root);
 	
-	
+	std::cout << LowestCommonAncestor(root, 4, 5)->data << "\n";
+
 	//root = mirrorTree(root);
 	//std::cout << totalSum(root) << "\n";
 	//std::cout << "Path Sum: " << hasPathSum(root, 9) << "\n";
